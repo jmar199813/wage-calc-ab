@@ -4,15 +4,15 @@ function calculateWages() {
   const hourlyWage = parseFloat(document.getElementById('hourlyWage').value);
   
   // Getting the hours worked for each day
+  const sundayHours = parseFloat(document.getElementById('sundayHours').value) || 0;
   const mondayHours = parseFloat(document.getElementById('mondayHours').value) || 0;
   const tuesdayHours = parseFloat(document.getElementById('tuesdayHours').value) || 0;
   const wednesdayHours = parseFloat(document.getElementById('wednesdayHours').value) || 0;
   const thursdayHours = parseFloat(document.getElementById('thursdayHours').value) || 0;
   const fridayHours = parseFloat(document.getElementById('fridayHours').value) || 0;
   const saturdayHours = parseFloat(document.getElementById('saturdayHours').value) || 0;
-  const sundayHours = parseFloat(document.getElementById('sundayHours').value) || 0;
 
-  const hoursWorked = mondayHours + tuesdayHours + wednesdayHours + thursdayHours + fridayHours + saturdayHours + sundayHours;
+  const hoursWorked = sundayHours + mondayHours + tuesdayHours + wednesdayHours + thursdayHours + fridayHours + saturdayHours;
 
   if (isNaN(hourlyWage) || hourlyWage <= 0 || hoursWorked <= 0) {
     alert('Please enter valid values for hourly wage and hours worked.');
@@ -24,7 +24,7 @@ function calculateWages() {
   let overtimeEarnings = 0;
 
   // For each day, calculate daily regular and overtime
-  const dailyHours = [mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours, sundayHours];
+  const dailyHours = [sundayHours, mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours];
   dailyHours.forEach(dayHours => {
     const regular = Math.min(dayHours, 8); // Regular hours are up to 8 hours
     const overtime = Math.max(0, dayHours - 8); // Overtime is anything above 8 hours

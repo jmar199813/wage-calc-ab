@@ -17,42 +17,42 @@
 
       <div class="input-group">
         <label for="sundayHours">Sunday:</label>
-        <input type="number" id="mondayHours" required>
+        <input type="number" id="sundayHours" required>
       </div>
       <div class="input-group">
         <label for="mondayHours">Monday:</label>
+        <input type="number" id="mondayHours" required>
+      </div>
+      <div class="input-group">
+        <label for="tuesdayHours">Tuesday:</label>
         <input type="number" id="tuesdayHours" required>
       </div>
       <div class="input-group">
-        <label for="tuedayHours">Tuesday:</label>
+        <label for="wednesdayHours">Wednesday:</label>
         <input type="number" id="wednesdayHours" required>
       </div>
       <div class="input-group">
-        <label for="wednesdayHours">Wednesday:</label>
+        <label for="thursdayHours">Thursday:</label>
         <input type="number" id="thursdayHours" required>
       </div>
       <div class="input-group">
-        <label for="thursdayHours">Thursday:</label>
-        <input type="number" id="fridayHours" required>
-      </div>
-      <div class="input-group">
         <label for="fridayHours">Friday:</label>
-        <input type="number" id="saturdayHours">
+        <input type="number" id="fridayHours">
       </div>
       <div class="input-group">
         <label for="saturdayHours">Saturday:</label>
-        <input type="number" id="sundayHours">
+        <input type="number" id="saturdayHours">
       </div>
 
       <button type="button" id="calculateBtn">Calculate Wage</button>
     </form>
 
-    <div class="result">
+    <div class="result" style="display:none;">
       <p><strong>Total Hours Worked This Week:</strong> <span id="totalHours">0</span> hours</p>
+      <p><strong>Overtime Hours Worked This Week:</strong> <span id="overtimeHours">0</span> hours</p>
       <p><strong>Regular Earnings:</strong> <span id="regularEarnings">0.00</span> CAD</p>
       <p><strong>Overtime Earnings:</strong> <span id="overtimeEarnings">0.00</span> CAD</p>
       <p><strong>Gross Earnings:</strong> <span id="grossEarnings">0.00</span> CAD</p>
-      <p><strong>Tax Deducted:</strong> <span id="taxDeducted">0.00</span> CAD</p>
       <p style="text-decoration: underline;"><strong>Net Earnings:</strong> <span id="netEarnings">0.00</span> CAD</p>
     </div>
   </div>

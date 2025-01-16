@@ -19,56 +19,52 @@ function calculateWages() {
     return;
   }
 
-  // Calculate regular and overtime earnings (daily overtime first)
+  // Initialize earnings and overtime variables
   let regularEarnings = 0;
-  let overtimeEarnings = 0;
-
-  const dailyHours = [sundayHours, mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours];
   let totalDailyOvertime = 0;
   let totalWeeklyOvertime = 0;
+  let overtimeHoursWorked = 0;
 
-  // For each day, calculate daily regular and overtime
+  const dailyHours = [sundayHours, mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours];
+
+  // Calculate regular and daily overtime earnings
   dailyHours.forEach(dayHours => {
     const regular = Math.min(dayHours, 8); // Regular hours are up to 8 hours
     const overtime = Math.max(0, dayHours - 8); // Overtime is anything above 8 hours
 
     regularEarnings += regular * hourlyWage;
     totalDailyOvertime += overtime * hourlyWage * 1.5; // Daily overtime at 1.5 times the hourly wage
+    overtimeHoursWorked += overtime; // Add daily overtime hours for the day
   });
-
-  // Total gross earnings (combining regular and daily overtime)
-  const grossEarnings = regularEarnings + totalDailyOvertime;
 
   // Weekly overtime calculation (if total weekly hours exceed 44)
   const totalWeeklyHours = dailyHours.reduce((sum, hours) => sum + hours, 0);
   if (totalWeeklyHours > 44) {
-    totalWeeklyOvertime = (totalWeeklyHours - 44) * hourlyWage * 1.5;
-  }
-
-  // Decide whether to use daily or weekly overtime (use daily if greater)
-  if (totalDailyOvertime > totalWeeklyOvertime) {
-    overtimeEarnings = totalDailyOvertime;  // Use daily overtime if greater
+    totalWeeklyOvertime = totalWeeklyHours - 44; // Weekly overtime hours beyond 44 hours
+    totalWeeklyOvertime = totalWeeklyOvertime * hourlyWage * 1.5; // Calculate weekly overtime earnings
+    overtimeHoursWorked = totalWeeklyHours - 44; // Add only weekly overtime hours to total overtime hours
   } else {
-    overtimeEarnings = totalWeeklyOvertime;  // Otherwise, use weekly overtime
+    // If total weekly hours are not greater than 44, just keep the daily overtime as total overtime
+    overtimeHoursWorked = totalDailyOvertime / hourlyWage / 1.5; // Convert overtime earnings back to hours
   }
 
-  // Tax calculation (Alberta provincial tax + federal tax)
-  const federalTaxRate = 0.15; // Example, 15% federal tax
-  const provincialTaxRate = 0.10; // Example, 10% provincial tax in Alberta
-  const totalTaxRate = federalTaxRate + provincialTaxRate;
+  // Total gross earnings (combining regular earnings and the larger of daily or weekly overtime)
+  const grossEarnings = regularEarnings + totalDailyOvertime + totalWeeklyOvertime;
 
-  const taxDeducted = grossEarnings * totalTaxRate;
-  const netEarnings = grossEarnings + overtimeEarnings - taxDeducted;
+  // Calculate the net earnings (gross earnings + overtime earnings)
+  const netEarnings = grossEarnings;
 
   // Display the result
   document.getElementById('regularEarnings').textContent = regularEarnings.toFixed(2);
-  document.getElementById('overtimeEarnings').textContent = overtimeEarnings.toFixed(2);
+  document.getElementById('overtimeEarnings').textContent = (totalDailyOvertime + totalWeeklyOvertime).toFixed(2);
   document.getElementById('grossEarnings').textContent = grossEarnings.toFixed(2);
-  document.getElementById('taxDeducted').textContent = taxDeducted.toFixed(2);
   document.getElementById('netEarnings').textContent = netEarnings.toFixed(2);
   
   // Display the total hours worked
   document.getElementById('totalHours').textContent = hoursWorked;
+  
+  // Display the overtime hours worked for the week (either daily or weekly overtime, whichever is greater)
+  document.getElementById('overtimeHours').textContent = overtimeHoursWorked.toFixed(2);
 
   // Show result section
   document.querySelector('.result').style.display = 'block';

@@ -21,9 +21,10 @@ function calculateWages() {
 
   // Initialize earnings and overtime variables
   let regularEarnings = 0;
-  let totalDailyOvertime = 0;
-  let totalWeeklyOvertime = 0;
-  let overtimeHoursWorked = 0;
+  let dailyOvertimeEarnings = 0;
+  let weeklyOvertimeEarnings = 0;
+  let dailyOvertimeHours = 0;  // Track total daily overtime hours
+  let totalWeeklyHours = 0;  // Track total hours worked in the week
 
   const dailyHours = [sundayHours, mondayHours, tuesdayHours, wednesdayHours, thursdayHours, fridayHours, saturdayHours];
 
@@ -33,30 +34,29 @@ function calculateWages() {
     const overtime = Math.max(0, dayHours - 8); // Overtime is anything above 8 hours
 
     regularEarnings += regular * hourlyWage;
-    totalDailyOvertime += overtime * hourlyWage * 1.5; // Daily overtime at 1.5 times the hourly wage
-    overtimeHoursWorked += overtime; // Add daily overtime hours for the day
+    dailyOvertimeEarnings += overtime * hourlyWage * 1.5;  // Daily overtime at 1.5x the hourly wage
+    dailyOvertimeHours += overtime; // Add daily overtime hours for the day
+    totalWeeklyHours += dayHours; // Add total weekly hours worked
   });
 
   // Weekly overtime calculation (if total weekly hours exceed 44)
-  const totalWeeklyHours = dailyHours.reduce((sum, hours) => sum + hours, 0);
   if (totalWeeklyHours > 44) {
-    totalWeeklyOvertime = totalWeeklyHours - 44; // Weekly overtime hours beyond 44 hours
-    totalWeeklyOvertime = totalWeeklyOvertime * hourlyWage * 1.5; // Calculate weekly overtime earnings
-    overtimeHoursWorked = totalWeeklyHours - 44; // Add only weekly overtime hours to total overtime hours
-  } else {
-    // If total weekly hours are not greater than 44, just keep the daily overtime as total overtime
-    overtimeHoursWorked = totalDailyOvertime / hourlyWage / 1.5; // Convert overtime earnings back to hours
+    weeklyOvertimeEarnings = (totalWeeklyHours - 44) * hourlyWage * 1.5; // Weekly overtime at 1.5x the hourly wage
   }
 
+  // Calculate the larger of the daily overtime or weekly overtime
+  const totalOvertimeEarnings = Math.max(dailyOvertimeEarnings, weeklyOvertimeEarnings);
+  const overtimeHoursWorked = Math.max(dailyOvertimeHours, totalWeeklyHours - 44);  // Pick larger overtime hours
+
   // Total gross earnings (combining regular earnings and the larger of daily or weekly overtime)
-  const grossEarnings = regularEarnings + totalDailyOvertime + totalWeeklyOvertime;
+  const grossEarnings = regularEarnings + totalOvertimeEarnings;
 
   // Calculate the net earnings (gross earnings + overtime earnings)
   const netEarnings = grossEarnings;
 
   // Display the result
   document.getElementById('regularEarnings').textContent = regularEarnings.toFixed(2);
-  document.getElementById('overtimeEarnings').textContent = (totalDailyOvertime + totalWeeklyOvertime).toFixed(2);
+  document.getElementById('overtimeEarnings').textContent = totalOvertimeEarnings.toFixed(2);
   document.getElementById('grossEarnings').textContent = grossEarnings.toFixed(2);
   document.getElementById('netEarnings').textContent = netEarnings.toFixed(2);
   
